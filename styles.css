@@ -1,0 +1,63 @@
+body{
+    background-color: whitesmoke;
+}
+
+:root {
+    --accent-color: #E8336D;
+
+    --line-chart-color: #607D8B;
+    --annotation-context-color: #00796B;
+    --annotation-above-color: #00BFA5;
+    --annotation-anomaly-color: #E8336D;
+}
+
+
+svg {
+    background-color: white;
+    font-family: 'Lato';
+}
+
+path.line {
+    fill: none;
+    stroke: lightgrey;
+    stroke-width: 1px;
+}
+
+.annotation path {
+    stroke: var(--accent-color);
+    fill: none;
+}
+
+.annotation path.connector-arrow,
+.title text, .annotation text,
+.annotation.callout.circle .annotation-subject path{
+    fill: var(--accent-color);
+}
+.annotation-note-bg {
+    fill: rgba(255, 255, 255, 0);
+}
+
+.blue-color {
+   color:  #3f51b5;
+}
+
+.annotation-note-title {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.annotation.xythreshold {
+    cursor: move;
+}
+
+.hidden {
+    display: none;
+}
+
+text.hover {
+    font-size: .7em;
+}
+
+text.title {
+    font-size: 1.1em;
+}
