@@ -8,7 +8,7 @@ const ANNOTATION_JUMP_KEY = "Annotation_jump_positive"
 const ANNOTATION_COLOR_KEY = "Annotation_color"
 
 const GRAPH_TITLE = "Graph"
-const DATE_FORMAT ="%d/%m/%Y"
+const DATE_FORMAT = "%d/%m/%Y"
 
 const margin = {
         top: 20,
@@ -20,16 +20,10 @@ const margin = {
 let width = 860 - margin.left - margin.right;
 
 
-
-
-
 const parseDate = d3.timeParse(DATE_FORMAT);
 
 const x = d3.scaleTime().range([0, width]);
 const y = d3.scaleLinear().range([height, 0]);
-
-
-
 
 const valueline = d3.line()
     .x(d => x(d.date))
@@ -43,18 +37,18 @@ const svg = d3.select("svg")
         "translate(" + margin.left + "," + margin.top + ")");
 
 
-
-
 d3.queue()
     .defer(d3.json, GRAPH_DATA)
-    .defer(d3.json, GRAPH_ANNOTATIONS )
+    .defer(d3.json, GRAPH_ANNOTATIONS)
     .await(getGraph);
 
 
-function getGraph(error, data, annotations) {
+function getGraph(error, data, annotations)
+{
     if (error) throw error;
 
-    data.forEach(function(d) {
+    data.forEach(function (d)
+    {
         d.date = parseDate(d[X_VALUE]);
         d.price = +d[Y_VALUE];
 
@@ -62,14 +56,17 @@ function getGraph(error, data, annotations) {
 
 
 
-    const labels = annotations && annotations.map(item => {
-        data && data.forEach(function(dataItem, i) {
+    const labels = annotations && annotations.map(item =>
+    {
+        data && data.forEach(function (dataItem, i)
+        {
             item.data = {}
             item.data.date = item["Date"];
 
-            if (dataItem['Date'] === item[X_VALUE]) {
+            if (dataItem['Date'] === item[X_VALUE])
+            {
                 item.ycoord = +dataItem[Y_VALUE]
-                console.log('item', item)
+
             }
             item.data.price = item.ycoord;
             item.subject = {}
@@ -80,11 +77,13 @@ function getGraph(error, data, annotations) {
             item["dx"] = 0;
             item["dy"] = 20;
 
-            const jump = item[ANNOTATION_JUMP_KEY]=== "TRUE" ? 'top' : 'bottom'
-            item.note = Object.assign({}, item.note, {
-                title: item[ANNOTATION_TITLE_KEY],
-                label: `${item.data.date} ${jump}`
-            })
+            const jump = item[ANNOTATION_JUMP_KEY] === "TRUE" ? 'top' : 'bottom'
+            item.note = Object.assign(
+                {}, item.note,
+                {
+                    title: item[ANNOTATION_TITLE_KEY],
+                    label: `${item.data.date} ${jump}`
+                })
         });
         return item
     })
@@ -106,11 +105,6 @@ function getGraph(error, data, annotations) {
     svg.append("g")
         .call(d3.axisLeft(y));
 
-
-
-
-    // добавляем заголовок
-
     svg.append("g")
         .append("text")
         .attr("x", (width / 2))
@@ -124,19 +118,23 @@ function getGraph(error, data, annotations) {
     window.makeAnnotations = d3.annotation()
         .annotations(labels)
         .type(d3.annotationCalloutCircle)
-        .accessors({
-            x: item => x(parseDate(item.date)),
-            y: item => y(item.price)
-        })
-        .accessorsInverse({
-            date: d => x.invert(d.x),
-            price: d => y.invert(d.y)
-        })
-        .on('subjectover', function(annotation) {
+        .accessors(
+            {
+                x: item => x(parseDate(item.date)),
+                y: item => y(item.price)
+            })
+        .accessorsInverse(
+            {
+                date: d => x.invert(d.x),
+                price: d => y.invert(d.y)
+            })
+        .on('subjectover', function (annotation)
+        {
             annotation.type.a.selectAll("g.annotation-connector, g.annotation-note")
                 .classed("hidden", false)
         })
-        .on('subjectout', function(annotation) {
+        .on('subjectout', function (annotation)
+        {
             annotation.type.a.selectAll("g.annotation-connector, g.annotation-note")
                 .classed("hidden", true)
         })
@@ -147,8 +145,5 @@ function getGraph(error, data, annotations) {
 
     svg.selectAll("g.annotation-connector, g.annotation-note")
         .classed("hidden", true)
-
-
-
 
 }
